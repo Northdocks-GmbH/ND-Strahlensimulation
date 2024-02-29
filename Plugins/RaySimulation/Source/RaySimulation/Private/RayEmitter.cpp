@@ -33,6 +33,9 @@ void ARayEmitter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+
+// Generates a random Rotator with values between -MaxDeviation and MaxDeviation. 
+// Normal weight just generates a random rotator, middle generates an averaged rotator, low generates lower values and high generates higher values. 
 FRotator ARayEmitter::GetRandomRotator(const float MaxDeviation, const ARayEmitter::RandomWeight weight) const
 {
 	float pitch0 = FMath::FRandRange(-MaxDeviation, MaxDeviation);
@@ -65,12 +68,14 @@ FRotator ARayEmitter::GetRandomRotator(const float MaxDeviation, const ARayEmitt
 	return FRotator(pitch0, yaw0, roll0);
 }
 
+// This function is only here to be exposed to blueprints since you can't work with quaternions otherwise. 
 FQuat ARayEmitter::RotatorToQuat(const FRotator inRot) const
 {
 	return inRot.Quaternion();
 }
 
 
+// Rotates a given vector by a random rotator. The higher maxDeviation, the more the vector gets turned.  
 FVector ARayEmitter::GetRotatedVectorRandom(const FVector InVector, const float maxDeviation, const RandomWeight inWeight) const
 {
 	FRotator tempRot{ InVector.ToOrientationRotator() };
@@ -81,7 +86,7 @@ FVector ARayEmitter::GetRotatedVectorRandom(const FVector InVector, const float 
 
 
 
-
+// Creates a random behaviour out of RayBehaviour. 
 RayBehaviour ARayEmitter::GetBehaviour(float AbsorbChance = 0.5f, float ReflectChance = 0.5f, float PierceChance = 0.0f, float PassChance = 0.0f)
 {
 	const float randomFloat{ FMath::FRandRange(0, 1) };
@@ -101,6 +106,8 @@ RayBehaviour ARayEmitter::GetBehaviour(float AbsorbChance = 0.5f, float ReflectC
 	return RayBehaviour::PASS;
 }
 
+
+// This function emits a single ray. 
 void ARayEmitter::EmitRay(TArray<FVector>& outLines, TArray<float>& outRadiation, RayBehaviour& firstRefraction, bool bPrintLines = true)
 {
 	float RemainingTraceDistance{ TraceDistance };
